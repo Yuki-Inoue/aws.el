@@ -46,8 +46,8 @@
      (list (cdr (assoc 'InstanceId instance))
            (vector (cdr (assoc 'InstanceId instance))
                    (cdr (assoc "Name" (cdr (assoc 'Tags instance))))
-                   (prin1-to-string instance))
-           )))
+                   (prin1-to-string instance)
+                   ))))
    ))
 
 (defun aws-instance-fix-tag (instance)
@@ -87,7 +87,6 @@
   "List Elasticsearch snapshots."
   (interactive)
   (pop-to-buffer "*aws-instances*")
-  (aws-instances-refresh)
   (tabulated-list-init-header)
   (aws-instances-mode)
   (tabulated-list-revert))
