@@ -19,14 +19,8 @@
 (require 'json)
 (require 'tabulated-list)
 (require 'dash)
+(require 'dash-functional)
 
-
-(defun compose (&rest funcs)
-  "composes several funcitons into one"
-  (lambda (arg)
-    (if funcs
-        (funcall (car funcs) (funcall (apply 'compose (cdr funcs)) arg))
-      arg)))
 
 (defun aws-raw-instances ()
   (interactive)
@@ -35,22 +29,22 @@
     (combine-and-quote-strings
      (list "aws" "ec2" "describe-instances")))))
 
-(setq aws-instances-test (aws-raw-instances))
+; (setq aws-instances-test (aws-raw-instances))
 
 
 (defun aws-convert-raw-instances (raw-instances)
 
   (->>
    raw-instances
-   (funcall (compose 'cdr (apply-partially 'assoc 'Reservations)))
+   (funcall (-compose 'cdr (apply-partially 'assoc 'Reservations)))
    ((lambda (v) (append v nil)))
-   (mapcar (compose 'cdr (apply-partially 'assoc 'Instances)))
+   (mapcar (-compose 'cdr (apply-partially 'assoc 'Instances)))
    (mapcar (lambda (v) (append v nil)))
    (-mapcat 'identity)
    (mapcar 'aws-instance-fix-tag)
    (mapcar (lambda (instance)
-     (list (aws-instance-id-of-instance instance)
-           (vector (aws-instance-id-of-instance instance)
+     (list (cdr (assoc 'InstanceId instance))
+           (vector (cdr (assoc 'InstanceId instance))
                    (cdr (assoc "Name" (cdr (assoc 'Tags instance))))
                    (prin1-to-string instance))
            )))
@@ -74,12 +68,12 @@
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
-          ("Name" 20 nil)
+          ("Name" 30 nil)
           ("Settings" 20 nil)])
   (setq tabulated-list-padding 2)
   (add-hook 'tabulated-list-revert-hook 'aws-instances-refresh nil t)
-  (tabulated-list-init-header))
-
+  (tabulated-list-init-header)
+  (tablist-minor-mode))
 
 
 (defun aws-instances-refresh ()
@@ -98,4 +92,4 @@
   (aws-instances-mode)
   (tabulated-list-revert))
 
-(provide 'aws)
+(provide 'aws-ec2)
