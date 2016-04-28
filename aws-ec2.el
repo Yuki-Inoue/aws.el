@@ -63,6 +63,12 @@
    instance))
 
 
+(defvar aws-instances-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "I" 'aws-instances-inspect-popup)
+    map)
+  "Keymap for `aws-instances-mode'.")
+
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
@@ -82,6 +88,44 @@
   (setq tabulated-list-entries
         (aws-convert-raw-instances
          (aws-raw-instances))))
+
+(defun aws-select-if-empty (&optional arg)
+  "Select current row is selection is empty."
+  (save-excursion
+    (when (null (tablist-get-marked-items))
+      (tablist-put-mark))))
+
+(defmacro aws-define-popup (name doc &rest args)
+  "Wrapper around `aws-utils-define-popup'."
+  `(progn
+     (magit-define-popup ,name ,doc ,@args)
+     (add-function :before (symbol-function ',name) #'aws-select-if-empty)))
+
+(aws-define-popup
+ aws-instances-inspect-popup
+ 'aws-instances-popups
+ :actions  '((?I "Inspect" aws-inspect-selection))
+ )
+
+
+
+
+(defun aws-inspect-selection ()
+  (interactive)
+  (let ((result (->>
+                 (tablist-get-marked-items)
+                 (mapcar 'car)
+                 (append '("aws" "ec2" "describe-instances" "--instance-ids"))
+                 (combine-and-quote-strings)
+                 (shell-command-to-string)))
+        (buffer (get-buffer-create "*aws result*")))
+
+    (with-current-buffer buffer
+      (erase-buffer)
+      (goto-char (point-max))
+      (insert result))
+
+    (display-buffer buffer)))
 
 (defun aws-instances ()
   "List Elasticsearch snapshots."
