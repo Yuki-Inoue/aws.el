@@ -46,7 +46,9 @@
      (list (cdr (assoc 'InstanceId instance))
            (vector (cdr (assoc 'InstanceId instance))
                    (cdr (assoc "Name" (cdr (assoc 'Tags instance))))
-                   (prin1-to-string instance)
+                   (cdr (assoc 'Name (cdr (assoc 'State instance))))
+                   (prin1-to-string (cdr (assoc 'PrivateIpAddress instance)) t)
+                   (or  "..." (prin1-to-string instance))
                    ))))
    ))
 
@@ -75,6 +77,8 @@
   (setq tabulated-list-format
         '[("Repository" 10 nil)
           ("Name" 30 nil)
+          ("Status" 10 nil)
+          ("IP" 15 nil)
           ("Settings" 20 nil)])
   (setq tabulated-list-padding 2)
   (add-hook 'tabulated-list-revert-hook 'aws-instances-refresh nil t)
