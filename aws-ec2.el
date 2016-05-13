@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+;;; aws-ec2 --- AWS EC2 manipulation from Emacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 Yuki Inoue <inouetakahiroki _at_ gmail.com>
 
@@ -31,9 +31,6 @@
   (interactive)
   (json-read-from-string
    (aws--shell-command-to-string "aws" "ec2" "describe-instances")))
-
-; (setq aws-instances-test (aws-raw-instances))
-
 
 (defun aws-convert-raw-instances (raw-instances)
 
@@ -119,27 +116,27 @@
 (aws-define-popup
  aws-instances-stop-popup
  'aws-instances-popups
- :actions  '((?S "Stop" aws-ec2-stop-selection)))
+ :actions  '((?S "Stop" aws-instances-stop-selection)))
 
 (aws-define-popup
  aws-instances-terminate-popup
  'aws-instances-popups
- :actions  '((?T "Terminate" aws-ec2-terminate-selection)))
+ :actions  '((?T "Terminate" aws-instances-terminate-selection)))
 
 
 (defun aws-ec2-command-on-selection (command)
   (apply 'aws--shell-command-to-string
          "aws" "ec2" command "--instance-ids" (docker-utils-get-marked-items-ids)))
 
-(defun aws-ec2-stop-selection ()
+(defun aws-instances-stop-selection ()
   (interactive)
   (aws-ec2-command-on-selection "stop-instances"))
 
-(defun aws-ec2-terminate-selection ()
+(defun aws-instances-terminate-selection ()
   (interactive)
   (aws-ec2-command-on-selection "terminate-instances"))
 
-(defun aws-inspect-selection ()
+(defun aws-instances-inspect-selection ()
   (interactive)
   (let ((result (->>
                  (tablist-get-marked-items)
@@ -170,3 +167,5 @@
     map))
 
 (provide 'aws-ec2)
+
+;;; aws-ec2.el ends here
