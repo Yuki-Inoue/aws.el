@@ -1,6 +1,6 @@
-;;; aws-ec2 --- AWS EC2 manipulation from Emacs -*- lexical-binding: t -*-
+;;; aws-ec2.el --- AWS EC2 manipulation from Emacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2016 Yuki Inoue <inouetakahiroki _at_ gmail.com>
+;; Copyright (C) 2016 Yuki Inoue
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: AWS, Amazon Web Service
@@ -22,6 +22,11 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;; Manipulate AWS ec2 from emacs.
+
+;;; Code:
 
 (require 'json)
 (require 'tabulated-list)
@@ -160,6 +165,7 @@
 
     (display-buffer buffer)))
 
+;;;###autoload
 (defun aws-instances ()
   "List Elasticsearch snapshots."
   (interactive)
