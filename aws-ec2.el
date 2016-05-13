@@ -22,12 +22,15 @@
 (require 'dash-functional)
 
 
+(defun aws--shell-command-to-string (&rest args)
+  (let ((cmd (funcall 'combine-and-quote-strings args)))
+    (message cmd)
+    (shell-command-to-string cmd)))
+
 (defun aws-raw-instances ()
   (interactive)
   (json-read-from-string
-   (shell-command-to-string
-    (combine-and-quote-strings
-     (list "aws" "ec2" "describe-instances")))))
+   (aws--shell-command-to-string "aws" "ec2" "describe-instances")))
 
 ; (setq aws-instances-test (aws-raw-instances))
 
@@ -74,6 +77,8 @@
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
+  (define-key tabulated-list-mode-map "S" 'aws-instances-stop-popup)
+
   (setq tabulated-list-format
         '[("Repository" 10 nil)
           ("Name" 30 nil)
@@ -108,10 +113,17 @@
 (aws-define-popup
  aws-instances-inspect-popup
  'aws-instances-popups
- :actions  '((?I "Inspect" aws-inspect-selection))
- )
+ :actions  '((?I "Inspect" aws-inspect-selection)))
 
+(aws-define-popup
+ aws-instances-stop-popup
+ 'aws-instances-popups
+ :actions  '((?S "Stop" aws-ec2-stop-selection)))
 
+(defun aws-ec2-stop-selection ()
+  (interactive)
+  (apply 'aws--shell-command-to-string
+   "aws" "ec2" "stop-instances" "--instance-ids" (docker-utils-get-marked-items-ids)))
 
 
 (defun aws-inspect-selection ()
@@ -138,5 +150,10 @@
   (tabulated-list-init-header)
   (aws-instances-mode)
   (tabulated-list-revert))
+
+(defvar aws-global-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map "c" 'aws-instances)
+    map))
 
 (provide 'aws-ec2)
