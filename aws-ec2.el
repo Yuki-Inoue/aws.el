@@ -32,6 +32,7 @@
 (require 'tabulated-list)
 (require 'dash)
 (require 'dash-functional)
+(require 'magit-popup)
 
 
 (defun aws--shell-command-to-string (&rest args)
