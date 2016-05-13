@@ -78,6 +78,7 @@
   "Major mode for handling a list of docker containers."
 
   (define-key tabulated-list-mode-map "S" 'aws-instances-stop-popup)
+  (define-key tabulated-list-mode-map "T" 'aws-instances-terminate-popup)
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
@@ -120,11 +121,23 @@
  'aws-instances-popups
  :actions  '((?S "Stop" aws-ec2-stop-selection)))
 
+(aws-define-popup
+ aws-instances-terminate-popup
+ 'aws-instances-popups
+ :actions  '((?T "Terminate" aws-ec2-terminate-selection)))
+
+
+(defun aws-ec2-command-on-selection (command)
+  (apply 'aws--shell-command-to-string
+         "aws" "ec2" command "--instance-ids" (docker-utils-get-marked-items-ids)))
+
 (defun aws-ec2-stop-selection ()
   (interactive)
-  (apply 'aws--shell-command-to-string
-   "aws" "ec2" "stop-instances" "--instance-ids" (docker-utils-get-marked-items-ids)))
+  (aws-ec2-command-on-selection "stop-instances"))
 
+(defun aws-ec2-terminate-selection ()
+  (interactive)
+  (aws-ec2-command-on-selection "terminate-instances"))
 
 (defun aws-inspect-selection ()
   (interactive)
