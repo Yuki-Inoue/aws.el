@@ -168,7 +168,7 @@
 
 ;;;###autoload
 (defun aws-instances ()
-  "List Elasticsearch snapshots."
+  "List aws instances using aws-cli. (The `aws` command)."
   (interactive)
   (pop-to-buffer "*aws-instances*")
   (tabulated-list-init-header)
