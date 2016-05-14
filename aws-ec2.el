@@ -5,7 +5,7 @@
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: AWS, Amazon Web Service
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "24") (dash "2.12.1") (dash-functional "1.2.0") (magit-popup "2.6.0") (tablist "0.70"))
+;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (dash-functional "1.2.0") (magit-popup "2.6.0") (tablist "0.70"))
 
 ;; This file is NOT part of GNU Emacs.
 
