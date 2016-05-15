@@ -1,4 +1,4 @@
-;;; aws-ec2.el --- AWS EC2 manipulation from Emacs -*- lexical-binding: t -*-
+;;; aws-ec2.el --- Manage AWS EC2 instances -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 Yuki Inoue
 
