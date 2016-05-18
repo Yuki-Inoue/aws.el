@@ -45,6 +45,28 @@
   (json-read-from-string
    (aws--shell-command-to-string "aws" "ec2" "describe-instances")))
 
+(defun aws-raw-images ()
+  (interactive)
+  (json-read-from-string
+   (aws--shell-command-to-string
+    "aws" "ec2" "describe-images" "--owners" "amazon"
+    "--query" "Images[0:100].{ID:ImageId,Name:Name,Description:Description}")))
+
+(defun aws-convert-raw-images (raw-images)
+
+  (->>
+   raw-images
+   ((lambda (v) (append v nil)))
+   (mapcar
+    (lambda (instance)
+      (list (assoc-default 'ID instance)
+            (vector
+             (assoc-default 'ID instance)
+             (assoc-default 'Name instance)
+             (assoc-default 'Description instance)))))))
+
+
+
 (defun aws-convert-raw-instances (raw-instances)
 
   (->>
