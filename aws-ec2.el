@@ -87,8 +87,9 @@
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
-  (define-key tabulated-list-mode-map "S" 'aws-instances-stop-popup)
+  (define-key tabulated-list-mode-map "O" 'aws-instances-stop-popup)
   (define-key tabulated-list-mode-map "T" 'aws-instances-terminate-popup)
+  (define-key tabulated-list-mode-map "S" 'aws-instances-start-popup)
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
@@ -129,12 +130,17 @@
 (aws-define-popup
  aws-instances-stop-popup
  'aws-instances-popups
- :actions  '((?S "Stop" aws-instances-stop-selection)))
+ :actions  '((?O "Stop" aws-instances-stop-selection)))
 
 (aws-define-popup
  aws-instances-terminate-popup
  'aws-instances-popups
  :actions  '((?T "Terminate" aws-instances-terminate-selection)))
+
+(aws-define-popup
+ aws-instances-start-popup
+ 'aws-instances-popups
+ :actions  '((?S "start" aws-instances-start-selection)))
 
 
 (defun aws-ec2-command-on-selection (command)
@@ -148,6 +154,10 @@
 (defun aws-instances-terminate-selection ()
   (interactive)
   (aws-ec2-command-on-selection "terminate-instances"))
+
+(defun aws-instances-start-selection ()
+  (interactive)
+  (aws-ec2-command-on-selection "start-instances"))
 
 (defun aws-instances-inspect-selection ()
   (interactive)
