@@ -49,18 +49,19 @@
 
   (->>
    raw-instances
-   (funcall (-compose 'cdr (apply-partially 'assoc 'Reservations)))
+   (assoc-default 'Reservations)
    ((lambda (v) (append v nil)))
-   (mapcar (-compose 'cdr (apply-partially 'assoc 'Instances)))
+   (mapcar (apply-partially 'assoc-default 'Instances))
    (mapcar (lambda (v) (append v nil)))
    (-mapcat 'identity)
    (mapcar 'aws-instance-fix-tag)
    (mapcar (lambda (instance)
      (list (cdr (assoc 'InstanceId instance))
-           (vector (cdr (assoc 'InstanceId instance))
-                   (cdr (assoc "Name" (cdr (assoc 'Tags instance))))
-                   (cdr (assoc 'Name (cdr (assoc 'State instance))))
-                   (prin1-to-string (cdr (assoc 'PrivateIpAddress instance)) t)
+           (vector (assoc-default 'InstanceId instance)
+                   (assoc-default 'InstanceType instance)
+                   (assoc-default "Name" (assoc-default 'Tags instance))
+                   (assoc-default 'Name (assoc-default 'State instance))
+                   (prin1-to-string (assoc-default 'PrivateIpAddress instance) t)
                    (or  "..." (prin1-to-string instance))
                    ))))
    ))
@@ -93,6 +94,7 @@
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
+          ("InstType" 10 nil)
           ("Name" 30 nil)
           ("Status" 10 nil)
           ("IP" 15 nil)
