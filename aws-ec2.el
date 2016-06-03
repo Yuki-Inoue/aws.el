@@ -59,7 +59,7 @@
      (list (cdr (assoc 'InstanceId instance))
            (vector (assoc-default 'InstanceId instance)
                    (assoc-default 'InstanceType instance)
-                   (assoc-default "Name" (assoc-default 'Tags instance))
+                   (or (assoc-default "Name" (assoc-default 'Tags instance)) "")
                    (assoc-default 'Name (assoc-default 'State instance))
                    (prin1-to-string (assoc-default 'PrivateIpAddress instance) t)
                    (or  "..." (prin1-to-string instance))
