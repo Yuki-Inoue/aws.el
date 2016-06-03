@@ -87,9 +87,9 @@
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
-  (define-key tabulated-list-mode-map "O" 'aws-instances-stop-popup)
-  (define-key tabulated-list-mode-map "T" 'aws-instances-terminate-popup)
-  (define-key tabulated-list-mode-map "S" 'aws-instances-start-popup)
+  (define-key aws-instances-mode-map "O" 'aws-instances-stop-popup)
+  (define-key aws-instances-mode-map "T" 'aws-instances-terminate-popup)
+  (define-key aws-instances-mode-map "S" 'aws-instances-start-popup)
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
