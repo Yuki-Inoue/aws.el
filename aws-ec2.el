@@ -81,6 +81,7 @@
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
+  (define-key aws-instances-mode-map "I" 'aws-instances-inspect-popup)
   (define-key aws-instances-mode-map "O" 'aws-instances-stop-popup)
   (define-key aws-instances-mode-map "T" 'aws-instances-terminate-popup)
   (define-key aws-instances-mode-map "S" 'aws-instances-start-popup)
@@ -120,7 +121,7 @@
 (aws-define-popup
  aws-instances-inspect-popup
  'aws-instances-popups
- :actions  '((?I "Inspect" aws-inspect-selection)))
+ :actions  '((?I "Inspect" aws-instances-inspect-selection)))
 
 (aws-define-popup
  aws-instances-stop-popup
