@@ -78,13 +78,6 @@
                      (cdr entry)))))
    instance))
 
-
-(defvar aws-instances-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "I" 'aws-instances-inspect-popup)
-    map)
-  "Keymap for `aws-instances-mode'.")
-
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
