@@ -100,6 +100,7 @@
   (define-key aws-instances-mode-map "O" 'aws-instances-stop-popup)
   (define-key aws-instances-mode-map "T" 'aws-instances-terminate-popup)
   (define-key aws-instances-mode-map "S" 'aws-instances-start-popup)
+  (define-key aws-instances-mode-map "P" 'aws-set-profile)
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
