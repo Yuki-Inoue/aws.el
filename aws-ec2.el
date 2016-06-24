@@ -36,9 +36,14 @@
 
 
 (defun aws--shell-command-to-string (&rest args)
-  (let ((cmd (funcall 'combine-and-quote-strings (cons "aws" args))))
+  (let ((cmd (funcall 'combine-and-quote-strings (append (aws-bin) args))))
     (message cmd)
     (shell-command-to-string cmd)))
+
+(defun aws-bin ()
+  (if aws-current-profile
+      (list "aws" "--profile" aws-current-profile)
+    (list "aws")))
 
 (defun aws-raw-instances ()
   (interactive)
@@ -77,6 +82,16 @@
                              (cdr (assoc 'Value kvassoc))))
                      (cdr entry)))))
    instance))
+
+(defvar aws-current-profile nil
+  "The currently used aws profile")
+
+(defun aws-set-profile (profile)
+  "Configures which profile to be used."
+  (interactive "sProfile: ")
+  (if (string= "" profile)
+      (setq profile nil))
+  (setq aws-current-profile profile))
 
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
