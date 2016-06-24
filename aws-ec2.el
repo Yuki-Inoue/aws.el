@@ -36,14 +36,14 @@
 
 
 (defun aws--shell-command-to-string (&rest args)
-  (let ((cmd (funcall 'combine-and-quote-strings args)))
+  (let ((cmd (funcall 'combine-and-quote-strings (cons "aws" args))))
     (message cmd)
     (shell-command-to-string cmd)))
 
 (defun aws-raw-instances ()
   (interactive)
   (json-read-from-string
-   (aws--shell-command-to-string "aws" "ec2" "describe-instances")))
+   (aws--shell-command-to-string "ec2" "describe-instances")))
 
 (defun aws-convert-raw-instances (raw-instances)
 
@@ -141,7 +141,7 @@
 
 (defun aws-ec2-command-on-selection (command)
   (apply 'aws--shell-command-to-string
-         "aws" "ec2" command "--instance-ids" (docker-utils-get-marked-items-ids)))
+         "ec2" command "--instance-ids" (docker-utils-get-marked-items-ids)))
 
 (defun aws-instances-stop-selection ()
   (interactive)
@@ -160,9 +160,9 @@
   (let ((result (->>
                  (tablist-get-marked-items)
                  (mapcar 'car)
-                 (append '("aws" "ec2" "describe-instances" "--instance-ids"))
+                 (append '("ec2" "describe-instances" "--instance-ids"))
                  (combine-and-quote-strings)
-                 (shell-command-to-string)))
+                 (aws--shell-command-to-string)))
         (buffer (get-buffer-create "*aws result*")))
 
     (with-current-buffer buffer
