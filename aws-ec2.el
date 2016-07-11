@@ -177,8 +177,7 @@
                  (tablist-get-marked-items)
                  (mapcar 'car)
                  (append '("ec2" "describe-instances" "--instance-ids"))
-                 (combine-and-quote-strings)
-                 (aws--shell-command-to-string)))
+                 (apply 'aws--shell-command-to-string)))
         (buffer (get-buffer-create "*aws result*")))
 
     (with-current-buffer buffer
