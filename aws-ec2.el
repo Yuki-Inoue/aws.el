@@ -50,8 +50,7 @@
   (json-read-from-string
    (aws--shell-command-to-string "ec2" "describe-instances")))
 
-(defun aws-convert-raw-instances (raw-instances)
-
+(defun aws-ec2-normalize-raw-instances (raw-instances)
   (->>
    raw-instances
    (assoc-default 'Reservations)
@@ -59,7 +58,11 @@
    (mapcar (apply-partially 'assoc-default 'Instances))
    (mapcar (lambda (v) (append v nil)))
    (-mapcat 'identity)
-   (mapcar 'aws-instance-fix-tag)
+   (mapcar 'aws-instance-fix-tag)))
+
+(defun aws-convert-raw-instances (raw-instances)
+  (->>
+   (aws-ec2-normalize-raw-instances raw-instances)
    (mapcar (lambda (instance)
      (list (cdr (assoc 'InstanceId instance))
            (vector (assoc-default 'InstanceId instance)
