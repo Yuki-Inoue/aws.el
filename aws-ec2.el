@@ -45,7 +45,7 @@
       (list "aws" "--profile" aws-current-profile)
     (list "aws")))
 
-(defun aws-raw-instances ()
+(defun aws-ec2-all-raw-instances ()
   (interactive)
   (json-read-from-string
    (aws--shell-command-to-string "ec2" "describe-instances")))
@@ -120,7 +120,7 @@
 
   (setq tabulated-list-entries
         (aws-convert-raw-instances
-         (aws-raw-instances))))
+         (aws-ec2-all-raw-instances))))
 
 (defun aws-select-if-empty (&optional arg)
   "Select current row is selection is empty."
