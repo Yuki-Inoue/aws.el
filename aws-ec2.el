@@ -60,20 +60,6 @@
    (-mapcat 'identity)
    (mapcar 'aws-instance-fix-tag)))
 
-(defun aws-convert-raw-instances (raw-instances)
-  (->>
-   (aws-ec2-normalize-raw-instances raw-instances)
-   (mapcar (lambda (instance)
-     (list (cdr (assoc 'InstanceId instance))
-           (vector (assoc-default 'InstanceId instance)
-                   (assoc-default 'InstanceType instance)
-                   (or (assoc-default "Name" (assoc-default 'Tags instance)) "")
-                   (assoc-default 'Name (assoc-default 'State instance))
-                   (prin1-to-string (assoc-default 'PrivateIpAddress instance) t)
-                   (or  "..." (prin1-to-string instance))
-                   ))))
-   ))
-
 (defun aws-instance-fix-tag (instance)
   (mapcar
    (lambda (entry)
@@ -121,9 +107,21 @@
 (defun aws-instances-refresh ()
   "Refresh elasticsearch snapshots."
 
-  (setq tabulated-list-entries
-        (aws-convert-raw-instances
-         (aws-ec2-all-raw-instances))))
+  (setq
+   tabulated-list-entries
+   (->>
+    (aws-ec2-normalize-raw-instances
+     (aws-ec2-all-raw-instances))
+    (mapcar (lambda (instance)
+              (list (cdr (assoc 'InstanceId instance))
+                    (vector (assoc-default 'InstanceId instance)
+                            (assoc-default 'InstanceType instance)
+                            (or (assoc-default "Name" (assoc-default 'Tags instance)) "")
+                            (assoc-default 'Name (assoc-default 'State instance))
+                            (prin1-to-string (assoc-default 'PrivateIpAddress instance) t)
+                            (or  "..." (prin1-to-string instance))
+                            ))))
+    )))
 
 (defun aws-select-if-empty (&optional arg)
   "Select current row is selection is empty."
