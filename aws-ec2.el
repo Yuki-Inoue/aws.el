@@ -89,6 +89,7 @@
   (define-key aws-instances-mode-map "O" 'aws-instances-stop-popup)
   (define-key aws-instances-mode-map "T" 'aws-instances-terminate-popup)
   (define-key aws-instances-mode-map "S" 'aws-instances-start-popup)
+  (define-key aws-instances-mode-map "C" 'aws-instances-configure-popup)
   (define-key aws-instances-mode-map "P" 'aws-set-profile)
 
   (setq tabulated-list-format
@@ -155,6 +156,12 @@
  'aws-instances-popups
  :actions  '((?S "start" aws-instances-start-selection)))
 
+(aws-define-popup
+ aws-instances-configure-popup
+ 'aws-instances-popups
+ :actions  '((?C "Configure ssh-config" aws-instances-configure-ssh-config)))
+
+
 
 (defun aws-ec2-command-on-selection (command)
   (apply 'aws--shell-command-to-string
@@ -187,6 +194,60 @@
       (insert result))
 
     (display-buffer buffer)))
+
+(defconst aws-instances-ssh-config-entry-template
+  "
+Host %s
+  HostName %s
+  User %s
+  IdentityFile %s
+%s")
+
+(defcustom aws-ec2-key-alist '()
+  "The Key String to KeyPath alist"
+  :type '(alist :key-type (string :tag "Key Name")
+                :value-type (string :tag "KeyPath")))
+
+(defcustom aws-instances-ssh-config-user-name "admin"
+  "The ssh user name for ssh-config."
+  :type 'string)
+
+(defcustom aws-instances-ssh-config-option-entries '()
+  "The ssh config entry"
+  :type '(repeat string)
+  )
+
+(defun aws-instances-configure-ssh-config ()
+  (interactive)
+  (let ((aws-instances
+         (->>
+          (docker-utils-get-marked-items-ids)
+          (apply 'aws--shell-command-to-string
+                 "ec2" "describe-instances"
+                 "--instance-ids")
+          (json-read-from-string)
+          (aws-ec2-normalize-raw-instances))))
+
+    (-each aws-instances
+      (lambda (aws-instance)
+        (let* ((host-name (->>
+                          aws-instance
+                          (assoc-default 'Tags)
+                          (assoc-default "Name")))
+               (host-ip (assoc-default 'PrivateIpAddress aws-instance))
+               (key-name (assoc-default 'KeyName aws-instance))
+               (key-path (assoc-default key-name aws-ec2-key-alist))
+               (snippet (format
+                         aws-instances-ssh-config-entry-template
+                         host-name host-ip
+                         aws-instances-ssh-config-user-name
+                         key-path
+                         (->>
+                          aws-instances-ssh-config-option-entries
+                          (-map (lambda (str) (concat "  " str)))
+                          (s-join "\n")))))
+          (write-region snippet nil "~/.ssh/config" 'append)
+          )))))
 
 ;;;###autoload
 (defun aws-instances ()
