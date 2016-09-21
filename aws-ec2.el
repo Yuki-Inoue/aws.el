@@ -201,7 +201,8 @@ Host %s
   HostName %s
   User %s
   IdentityFile %s
-%s")
+%s
+")
 
 (defcustom aws-ec2-key-alist '()
   "The Key String to KeyPath alist"
