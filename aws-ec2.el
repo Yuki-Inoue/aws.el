@@ -175,20 +175,21 @@
 
 (defun aws-instances-inspect-selection ()
   (interactive)
-  (let ((result (->>
-                 (tablist-get-marked-items)
-                 (mapcar 'car)
-                 (append '("ec2" "describe-instances" "--instance-ids"))
-                 (apply 'aws--shell-command-to-string)))
+  (let ((args (->>
+               (tablist-get-marked-items)
+               (mapcar 'car)
+               (append '("ec2" "describe-instances" "--instance-ids")))))
+    (apply 'aws--shell-command-to-result-buffer args)))
+
+(defun aws--shell-command-to-result-buffer (&rest args)
+  (let ((result (apply 'aws--shell-command-to-string args))
         (buffer (get-buffer-create "*aws result*")))
 
     (with-current-buffer buffer
       (erase-buffer)
       (goto-char (point-max))
       (insert result))
-
     (display-buffer buffer)))
-
 (defconst aws-instances-ssh-config-entry-template
   "
 Host %s
