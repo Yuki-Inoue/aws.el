@@ -86,9 +86,7 @@
   "Major mode for handling a list of docker containers."
 
   (define-key aws-instances-mode-map "I" 'aws-instances-inspect-popup)
-  (define-key aws-instances-mode-map "O" 'aws-instances-stop-popup)
-  (define-key aws-instances-mode-map "T" 'aws-instances-terminate-popup)
-  (define-key aws-instances-mode-map "S" 'aws-instances-start-popup)
+  (define-key aws-instances-mode-map "S" 'aws-instances-state-popup)
   (define-key aws-instances-mode-map "C" 'aws-instances-configure-popup)
   (define-key aws-instances-mode-map "P" 'aws-set-profile)
 
@@ -142,19 +140,11 @@
  :actions  '((?I "Inspect" aws-instances-inspect-selection)))
 
 (aws-define-popup
- aws-instances-stop-popup
+ aws-instances-state-popup
  'aws-instances-popups
- :actions  '((?O "Stop" aws-instances-stop-selection)))
-
-(aws-define-popup
- aws-instances-terminate-popup
- 'aws-instances-popups
- :actions  '((?T "Terminate" aws-instances-terminate-selection)))
-
-(aws-define-popup
- aws-instances-start-popup
- 'aws-instances-popups
- :actions  '((?S "start" aws-instances-start-selection)))
+ :actions  '((?O "Stop" aws-instances-stop-selection)
+             (?T "Terminate" aws-instances-terminate-selection)
+             (?S "start" aws-instances-start-selection)))
 
 (aws-define-popup
  aws-instances-configure-popup
@@ -173,7 +163,10 @@
 
 (defun aws-instances-terminate-selection ()
   (interactive)
-  (aws-ec2-command-on-selection "terminate-instances"))
+  (if (yes-or-no-p (format "Really Terminate the %d instances?"
+                           (length
+                            (docker-utils-get-marked-items-ids))))
+      (aws-ec2-command-on-selection "terminate-instances")))
 
 (defun aws-instances-start-selection ()
   (interactive)
