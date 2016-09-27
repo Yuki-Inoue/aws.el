@@ -87,6 +87,7 @@
 
   (define-key aws-instances-mode-map "I" 'aws-instances-inspect-popup)
   (define-key aws-instances-mode-map "S" 'aws-instances-state-popup)
+  (define-key aws-instances-mode-map "A" 'aws-instances-action-popup)
   (define-key aws-instances-mode-map "C" 'aws-instances-configure-popup)
   (define-key aws-instances-mode-map "P" 'aws-set-profile)
 
@@ -147,6 +148,11 @@
              (?S "start" aws-instances-start-selection)))
 
 (aws-define-popup
+ aws-instances-action-popup
+ 'aws-instances-popups
+ :actions  '((?R "Rename Instance" aws-instances-rename-instance)))
+
+(aws-define-popup
  aws-instances-configure-popup
  'aws-instances-popups
  :actions  '((?C "Configure ssh-config" aws-instances-configure-ssh-config)))
@@ -190,6 +196,18 @@
       (goto-char (point-max))
       (insert result))
     (display-buffer buffer)))
+
+(defun aws-instances-rename-instance ()
+  (interactive)
+  (let ((ids (mapcar 'car (tablist-get-marked-items))))
+    (if (/= 1 (length ids))
+        (error "Multiple instances cannot be selected.")
+      (let ((new-name (read-string "New Name: "))
+            (id (nth 0 ids)))
+        (aws--shell-command-to-string
+         "ec2" "create-tags"
+         "--resources" id "--tags" (format "Key=Name,Value=%s" new-name))))))
+
 (defconst aws-instances-ssh-config-entry-template
   "
 Host %s
