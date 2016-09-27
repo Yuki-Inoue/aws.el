@@ -12,9 +12,9 @@ Note that it is a tablist buffer so various table view operations are supported.
 
 For aws operation, currently following is implemented.
 
-`S` will popup the state change; start, stop or terminate.
-`I` will popup for inspection.
-`A` will popup for other actions.
+ * `S` will popup the state change; start, stop or terminate.
+ * `I` will popup for inspection.
+ * `A` will popup for other actions.
 
 # Requirements
 
