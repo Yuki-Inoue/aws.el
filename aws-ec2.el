@@ -3,7 +3,7 @@
 ;; Copyright (C) 2016 Yuki Inoue
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
-;; URL: AWS, Amazon Web Service
+;; URL: https://github.com/Yuki-Inoue/aws.el
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (dash-functional "1.2.0") (magit-popup "2.6.0") (tablist "0.70"))
 
