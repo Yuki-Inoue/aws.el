@@ -29,7 +29,7 @@
 ;;; Code:
 
 (require 'json)
-(require 'tabulated-list)
+(require 'tablist)
 (require 'dash)
 (require 'dash-functional)
 (require 'magit-popup)
@@ -155,7 +155,8 @@
 
 (defun aws-ec2-command-on-selection (command)
   (apply 'aws--shell-command-to-string
-         "ec2" command "--instance-ids" (docker-utils-get-marked-items-ids)))
+         "ec2" command "--instance-ids"
+         (-map #'car (tablist-get-marked-items))))
 
 (defun aws-instances-stop-selection ()
   (interactive)
@@ -165,7 +166,7 @@
   (interactive)
   (if (yes-or-no-p (format "Really Terminate the %d instances?"
                            (length
-                            (docker-utils-get-marked-items-ids))))
+                            (tablist-get-marked-items))))
       (aws-ec2-command-on-selection "terminate-instances")))
 
 (defun aws-instances-start-selection ()
@@ -215,7 +216,8 @@ Host %s
   (interactive)
   (let ((aws-instances
          (->>
-          (docker-utils-get-marked-items-ids)
+          (tablist-get-marked-items)
+          (-map #'car)
           (apply 'aws--shell-command-to-string
                  "ec2" "describe-instances"
                  "--instance-ids")
