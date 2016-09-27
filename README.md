@@ -1,13 +1,20 @@
 # aws.el
 
-Under construction, but you can try out what this package tries to achieve by:
+Ultimate goal of this package is to replace the manipulation you do on aws console with emacs interface.
+
+It is under construction, but you can try out what this package tries to achieve by:
 
    `M-x aws-instances`
 
-
 You'll see a table-list buffer of AWS instances.
+Note that it is a tablist buffer so various table view operations are supported.
+(refer: https://github.com/politza/tablist )
 
-`S` will popup the actions available; start, stop or terminate.
+For aws operation, currently following is implemented.
+
+`S` will popup the state change; start, stop or terminate.
+`I` will popup for inspection.
+`A` will popup for other actions.
 
 # Requirements
 
