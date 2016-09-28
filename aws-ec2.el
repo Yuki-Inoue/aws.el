@@ -64,16 +64,16 @@
    (mapcar #'aws-instance-fix-tag)))
 
 (defun aws-instance-fix-tag (instance)
-  (mapcar
-   (lambda (entry)
-     (if (not (equal (car entry) 'Tags))
-         entry
-       (cons 'Tags
-             (mapcar (lambda (kvassoc)
-                       (cons (cdr (assoc 'Key kvassoc))
-                             (cdr (assoc 'Value kvassoc))))
-                     (cdr entry)))))
-   instance))
+  (->> instance
+       (mapcar
+        (lambda (entry)
+          (if (not (equal (car entry) 'Tags))
+              entry
+            (cons 'Tags
+                  (mapcar (lambda (kvassoc)
+                            (cons (assoc-default 'Key kvassoc)
+                                  (assoc-default 'Value kvassoc)))
+                          (cdr entry))))))))
 
 (defvar aws-current-profile nil
   "The currently used aws profile")
