@@ -40,10 +40,13 @@
     (message cmd)
     (shell-command-to-string cmd)))
 
-(defun aws-bin ()
+(defun aws-profile-args ()
   (if aws-current-profile
-      (list "aws" "--profile" aws-current-profile)
-    (list "aws")))
+      `("--profile" ,aws-current-profile)
+    nil))
+
+(defun aws-bin ()
+  (cons "aws" (aws-profile-args)))
 
 (defun aws-ec2-all-raw-instances ()
   (interactive)
