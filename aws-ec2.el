@@ -36,7 +36,7 @@
 
 
 (defun aws--shell-command-to-string (&rest args)
-  (let ((cmd (funcall 'combine-and-quote-strings (append (aws-bin) args))))
+  (let ((cmd (funcall #'combine-and-quote-strings (append (aws-bin) args))))
     (message cmd)
     (shell-command-to-string cmd)))
 
@@ -58,10 +58,10 @@
    raw-instances
    (assoc-default 'Reservations)
    ((lambda (v) (append v nil)))
-   (mapcar (apply-partially 'assoc-default 'Instances))
+   (mapcar (apply-partially #'assoc-default 'Instances))
    (mapcar (lambda (v) (append v nil)))
-   (-mapcat 'identity)
-   (mapcar 'aws-instance-fix-tag)))
+   (-mapcat #'identity)
+   (mapcar #'aws-instance-fix-tag)))
 
 (defun aws-instance-fix-tag (instance)
   (mapcar
@@ -88,11 +88,11 @@
 (define-derived-mode aws-instances-mode tabulated-list-mode "Containers Menu"
   "Major mode for handling a list of docker containers."
 
-  (define-key aws-instances-mode-map "I" 'aws-instances-inspect-popup)
-  (define-key aws-instances-mode-map "S" 'aws-instances-state-popup)
-  (define-key aws-instances-mode-map "A" 'aws-instances-action-popup)
-  (define-key aws-instances-mode-map "C" 'aws-instances-configure-popup)
-  (define-key aws-instances-mode-map "P" 'aws-set-profile)
+  (define-key aws-instances-mode-map "I" #'aws-instances-inspect-popup)
+  (define-key aws-instances-mode-map "S" #'aws-instances-state-popup)
+  (define-key aws-instances-mode-map "A" #'aws-instances-action-popup)
+  (define-key aws-instances-mode-map "C" #'aws-instances-configure-popup)
+  (define-key aws-instances-mode-map "P" #'aws-set-profile)
 
   (setq tabulated-list-format
         '[("Repository" 10 nil)
@@ -102,7 +102,7 @@
           ("IP" 15 nil)
           ("Settings" 20 nil)])
   (setq tabulated-list-padding 2)
-  (add-hook 'tabulated-list-revert-hook 'aws-instances-refresh nil t)
+  (add-hook 'tabulated-list-revert-hook #'aws-instances-refresh nil t)
   (tabulated-list-init-header)
   (tablist-minor-mode))
 
@@ -191,12 +191,12 @@
   (interactive)
   (let ((args (->>
                (tablist-get-marked-items)
-               (mapcar 'car)
+               (mapcar #'car)
                (append '("ec2" "describe-instances" "--instance-ids")))))
-    (apply 'aws--shell-command-to-result-buffer args)))
+    (apply #'aws--shell-command-to-result-buffer args)))
 
 (defun aws--shell-command-to-result-buffer (&rest args)
-  (let ((result (apply 'aws--shell-command-to-string args))
+  (let ((result (apply #'aws--shell-command-to-string args))
         (buffer (get-buffer-create "*aws result*")))
 
     (with-current-buffer buffer
@@ -207,7 +207,7 @@
 
 (defun aws-instances-rename-instance ()
   (interactive)
-  (let ((ids (mapcar 'car (tablist-get-marked-items))))
+  (let ((ids (mapcar #'car (tablist-get-marked-items))))
     (if (/= 1 (length ids))
         (error "Multiple instances cannot be selected.")
       (let ((new-name (read-string "New Name: "))
@@ -245,7 +245,7 @@ Host %s
          (->>
           (tablist-get-marked-items)
           (-map #'car)
-          (apply 'aws--shell-command-to-string
+          (apply #'aws--shell-command-to-string
                  "ec2" "describe-instances"
                  "--instance-ids")
           (json-read-from-string)
@@ -283,7 +283,7 @@ Host %s
 
 (defvar aws-global-keymap
   (let ((map (make-sparse-keymap)))
-    (define-key map "c" 'aws-instances)
+    (define-key map "c" #'aws-instances)
     map))
 
 (provide 'aws-ec2)
