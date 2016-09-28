@@ -145,7 +145,7 @@
  'aws-instances-popups
  :actions  '((?O "Stop" aws-instances-stop-selection)
              (?T "Terminate" aws-instances-terminate-selection)
-             (?S "start" aws-instances-start-selection)))
+             (?S "Start" aws-instances-start-selection)))
 
 (aws-define-popup
  aws-instances-action-popup
