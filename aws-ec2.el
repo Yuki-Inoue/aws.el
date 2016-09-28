@@ -144,6 +144,7 @@
  aws-instances-state-popup
  'aws-instances-popups
  :actions  '((?O "Stop" aws-instances-stop-selection)
+             (?R "Reboot" aws-instances-reboot-selection)
              (?T "Terminate" aws-instances-terminate-selection)
              (?S "Start" aws-instances-start-selection)))
 
@@ -163,6 +164,10 @@
   (apply 'aws--shell-command-to-string
          "ec2" command "--instance-ids"
          (-map #'car (tablist-get-marked-items))))
+
+(defun aws-instances-reboot-selection ()
+  (interactive)
+  (aws-ec2-command-on-selection "reboot-instances"))
 
 (defun aws-instances-stop-selection ()
   (interactive)
