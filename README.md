@@ -18,6 +18,15 @@ For aws operation, currently following is implemented.
  * `C` will popup ssh configuration popup.
    Instance ssh info can be appended to `~/.ssh/config`.
 
+
+# Installation
+
+This repo's packages will be available via melpa.
+
+  * https://melpa.org/#/aws-ec2
+
+If you want install manually, simply clone this repo, put it to loadpath, and require the package you want to use.
+
 # Requirements
 
 You'll need to have aws-cli installed on your PC, and have it configured so that aws commands are available.
