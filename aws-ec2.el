@@ -118,7 +118,7 @@
 
 
 (defun aws-instances-refresh ()
-  "Refresh elasticsearch snapshots."
+  "Refresh aws-instances entries."
 
   (setq
    tabulated-list-entries
