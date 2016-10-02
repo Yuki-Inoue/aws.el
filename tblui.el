@@ -3,7 +3,7 @@
 ;; Copyright (C) 2016 Yuki Inoue
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
-;; URL: https://github.com/Yuki-Inoue/tblui.el
+;; URL: https://github.com/Yuki-Inoue/aws.el
 ;; Version: 0.0.1
 ;; Package-Requires: ((dash "2.12.1") (magit-popup "2.6.0") (tablist "0.70") (cl-lib "0.5"))
 
