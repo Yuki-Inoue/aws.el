@@ -42,7 +42,7 @@
 
 (defun aws--shell-command-to-string (&rest args)
   (with-temp-buffer
-    (let* ((retval (apply 'call-process (aws-bin) nil (current-buffer) nil (append (aws-profile-args) args)))
+    (let* ((retval (apply #'call-process (aws-bin) nil (current-buffer) nil (append (aws-profile-args) args)))
            (output (buffer-string)))
       (unless (= 0 retval)
         (with-current-buffer (get-buffer-create "*aws-errors*") (insert output))
