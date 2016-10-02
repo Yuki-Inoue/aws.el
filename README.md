@@ -15,6 +15,8 @@ For aws operation, currently following is implemented.
  * `S` will popup the state change; start, stop or terminate.
  * `I` will popup for inspection.
  * `A` will popup for other actions.
+ * `C` will popup ssh configuration popup.
+   Instance ssh info can be appended to `~/.ssh/config`.
 
 # Requirements
 

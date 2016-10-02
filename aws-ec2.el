@@ -169,7 +169,7 @@
 (aws-define-popup
  aws-instances-configure-popup
  'aws-instances-popups
- :actions  '((?C "Configure ssh-config" aws-instances-configure-ssh-config)))
+ :actions  '((?C "Append ssh configs to ~/.ssh/config" aws-instances-configure-ssh-config)))
 
 
 
