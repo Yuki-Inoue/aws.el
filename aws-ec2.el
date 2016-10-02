@@ -176,7 +176,7 @@
 (defun aws-ec2-command-on-selection (command)
   (apply 'aws--shell-command-to-string
          "ec2" command "--instance-ids"
-         (-map #'car (tablist-get-marked-items))))
+         (mapcar #'car (tablist-get-marked-items))))
 
 (defun aws-instances-reboot-selection ()
   (interactive)
@@ -254,7 +254,7 @@ Host %s
   (let ((aws-instances
          (->>
           (tablist-get-marked-items)
-          (-map #'car)
+          (mapcar #'car)
           (apply #'aws--shell-command-to-string
                  "ec2" "describe-instances"
                  "--instance-ids")
@@ -277,7 +277,7 @@ Host %s
                          key-path
                          (->>
                           aws-instances-ssh-config-option-entries
-                          (-map (lambda (str) (concat "  " str)))
+                          (mapcar (lambda (str) (concat "  " str)))
                           (s-join "\n")))))
           (write-region snippet nil "~/.ssh/config" 'append)
           )))))
