@@ -85,16 +85,6 @@
                                   (assoc-default 'Value kvassoc)))
                           (cdr entry))))))))
 
-(defvar aws-current-profile nil
-  "The currently used aws profile")
-
-(defun aws-set-profile (profile)
-  "Configures which profile to be used."
-  (interactive "sProfile: ")
-  (if (string= "" profile)
-      (setq profile nil))
-  (setq aws-current-profile profile))
-
 (defun aws-instances-get-tabulated-list-entries ()
   (->>
    (aws-ec2-normalize-raw-instances
@@ -230,6 +220,18 @@ Host %s
    (:name . aws-instances-configure-popup)
    (:funcs . ((?C "Append ssh configs to ~/.ssh/config" aws-instances-configure-ssh-config))))
   ))
+
+(defvar aws-current-profile nil
+  "The currently used aws profile")
+
+(defun aws-set-profile (profile)
+  "Configures which profile to be used."
+  (interactive "sProfile: ")
+  (if (string= "" profile)
+      (setq profile nil))
+  (setq aws-current-profile profile))
+
+(define-key aws-instances-mode-map "P" #'aws-set-profile)
 
 ;;;###autoload
 (defun aws-instances ()
