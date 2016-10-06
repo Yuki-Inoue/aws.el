@@ -5,7 +5,7 @@
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: https://github.com/Yuki-Inoue/aws.el
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (magit-popup "2.6.0") (tablist "0.70") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (tblui "0.0.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
