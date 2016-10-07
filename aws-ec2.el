@@ -70,7 +70,7 @@
    ((lambda (v) (append v nil)))
    (mapcar (apply-partially #'assoc-default 'Instances))
    (mapcar (lambda (v) (append v nil)))
-   (-mapcat #'identity)
+   (apply #'append)
    (mapcar #'aws-instance-fix-tag)))
 
 (defun aws-instance-fix-tag (instance)
@@ -90,7 +90,7 @@
    (aws-ec2-normalize-raw-instances
     (aws-ec2-all-raw-instances))
    (mapcar (lambda (instance)
-             (list (cdr (assoc 'InstanceId instance))
+             (list (assoc-default 'InstanceId instance)
                    (vector (assoc-default 'InstanceId instance)
                            (assoc-default 'InstanceType instance)
                            (or (assoc-default "Name" (assoc-default 'Tags instance)) "")
