@@ -4,8 +4,8 @@
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: https://github.com/Yuki-Inoue/aws.el
-;; Version: 0.0.2
-;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (tblui "0.0.3"))
+;; Version: 0.0.3
+;; Package-Requires: ((emacs "24.4") (dash "2.12.1") (tblui "0.1.0"))
 
 ;; This file is NOT part of GNU Emacs.
 
