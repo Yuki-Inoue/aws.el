@@ -40,7 +40,7 @@
 
 (defun aws--shell-command-to-string (&rest args)
   (with-temp-buffer
-    (let* ((aws-cmd-args (append (aws-profile-args) args))
+    (let* ((aws-cmd-args (append (aws-profile-args) (aws-endpoint-args) args))
            (not-used (message (combine-and-quote-strings (cons (aws-bin) aws-cmd-args))))
            (retval (apply #'call-process (aws-bin) nil (current-buffer) nil aws-cmd-args))
            (output (buffer-string)))
@@ -48,6 +48,11 @@
         (with-current-buffer (get-buffer-create "*aws-errors*") (insert output))
         (error "The aws command failed. Check *aws-errors* for output"))
       output)))
+
+(defun aws-endpoint-args ()
+  (if aws-current-endpoint
+      `("--endpoint" ,aws-current-endpoint)
+    nil))
 
 (defun aws-profile-args ()
   (if aws-current-profile
@@ -220,6 +225,17 @@ Host %s
    :name aws-instances-configure-popup
    :funcs ((?C "Append ssh configs to ~/.ssh/config" aws-instances-configure-ssh-config)))
   ))
+
+
+(defvar aws-current-endpoint nil
+  "The currently used aws endpoint")
+
+(defun aws-set-endpoint (endpoint)
+  "Configures which endpoint to be used."
+  (interactive "sEndpoint: ")
+  (if (string= "" endpoint)
+      (setq endpoint nil))
+  (setq aws-current-endpoint endpoint))
 
 (defvar aws-current-profile nil
   "The currently used aws profile")
